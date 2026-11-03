@@ -115,6 +115,19 @@ The first clip after a server start takes longer: ≈0.5–1 min more to load th
 
 **Which preset:** `ts_h2` for most shots (static or gently moving camera, medium and wide shots, dialogue). `ts_s6` for shots where a camera move or a close-up face matters (push-ins, dolly moves, beauty close-ups, lip-sync-critical dialogue), and with reference images (Ref2VA). Rule of thumb: camera move → `ts_s6`, static → `ts_h2`.
 
+## RTX PRO 6000
+
+The same pack runs on an RTX PRO 6000 (Blackwell desktop, sm_120). Settings: 768×1344, 141 frames (≈5.9 s at 24 fps), first-and-last-frame clips with a prompt, models kept loaded, ComfyUI 0.42.5. The Results table uses a first frame only, so these timings are not a like-for-like comparison.
+
+| Preset | Warm clip (models loaded) |
+|---|---|
+| `ts_h2` | ≈36 s |
+| `ts_h2_sparse` | 33 s |
+
+The first render after the models load takes about 121 s (`ts_h2`, seed 43; the kernels build if they are not cached). For comparison, `ts_h2` on DGX Spark takes 113–150 s per clip (see Results).
+
+Use `ts_h2_sparse` on this card. It adds training-free sparse attention (`sparse="sol-attn"`) on top of `ts_h2`, and it is faster here. Its look was checked by eye against `ts_h2` on a set of shots at two seeds; no quality metrics were run for it in this repository. `ts_h2` stays the default preset in code.
+
 ## Quick start
 
 Requirements: one NVIDIA DGX Spark (GB10, 128 GB unified memory) with DGX OS and Docker, about 72 GB of disk for the model files (plus ≈40 GB for the optional Ref2VA checkpoint) and ≈21 GB for the image. Setting it up from scratch (Docker image, weights with sha256, kernels, evaluation environment): **`REBUILD.md`**.
