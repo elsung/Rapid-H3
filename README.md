@@ -122,11 +122,10 @@ The same pack runs on an RTX PRO 6000 (Blackwell desktop, sm_120). Settings: 768
 | Preset | Warm clip (models loaded) |
 |---|---|
 | `ts_h2` | ≈36 s |
-| `ts_h2_sparse` | 33 s |
 
 The first render after the models load takes about 121 s (`ts_h2`, seed 43; the kernels build if they are not cached). For comparison, `ts_h2` on DGX Spark takes 113–150 s per clip (see Results).
 
-Use `ts_h2_sparse` on this card. It adds training-free sparse attention (`sparse="sol-attn"`) on top of `ts_h2`, and it is faster here. Its look was checked by eye against `ts_h2` on a set of shots at two seeds; no quality metrics were run for it in this repository. `ts_h2` stays the default preset in code.
+`workflow.build(..., sparse="sol-attn")` exists as an opt-in, but it is lossy in our measurements (see docs/kernels.md); it is not a preset.
 
 ## Quick start
 
@@ -279,7 +278,7 @@ Other variables the pack reads (all optional):
 | `RAPIDH3_TRACE`, `RAPIDH3_TRACE_CLIP`, `RAPIDH3_TIMING`, `RAPIDH3_PROBE`, `RAPIDH3_PROFILE`, `RAPIDH3_PROFILE_PERIOD`, `RAPIDH3_STATS`, `RAPIDH3_SHADOW`, `RAPIDH3_STEPS`, `RAPIDH3_DUMP`, `RAPIDH3_RRCHECK` | debugging switches and their output files | output files, written to the container's data mount: point them at a folder you own when you turn one on |
 | `RAPIDH3_DIR`, `RAPIDH3_MODELS`, `RAPIDH3_EVAL_CACHE` | the harness scripts' data, weights and evaluation caches | `~/rapid-h3`, `~/h3/models`, `$RAPIDH3_DIR/eval_cache` |
 
-**ComfyUI version.** `ts_h2` and `ts_s6` run on ComfyUI 0.42.1 (the default image) or 0.39. `ts_h2_sparse` needs ComfyUI 0.42 or newer: it uses the `BlockSparseAttention` node. Its RTX numbers were measured on 0.42.5.
+**ComfyUI version.** `ts_h2` and `ts_s6` run on ComfyUI 0.42.1 (the default image) or 0.39.
 
 **Free the card first.** Stop any other GPU server on the same card (a second ComfyUI, another model server) before a render, and check `nvidia-smi`. The pipeline keeps the DiT, the text encoder and the VAE loaded; another process on the card can take the memory a render needs and make it fail.
 

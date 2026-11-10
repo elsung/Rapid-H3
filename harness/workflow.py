@@ -50,9 +50,6 @@ _RAPIDH3 = dict(quant="int8_rot", attention="comfy kitchen attention", video_vae
 _H2 = dict(_RAPIDH3, steps=6, draft="0.7", refine_sigmas="0.72, 0", freeze_audio=True, decode_save="overlap")
 PRESETS = {
     "ts_h2": dict(_H2, encode_once="draft", rapidh3_attn=190, te_quant="int8_rot"),
-    # ts_h2 + training-free sparse attention (sol-attn). Same look as ts_h2 on the shots checked by eye; faster on
-    # the RTX PRO 6000 (see README). sla and vsa need trained weights and are not used.
-    "ts_h2_sparse": dict(_H2, encode_once="draft", rapidh3_attn=190, te_quant="int8_rot", sparse="sol-attn"),
     "ts_h": dict(_RAPIDH3, steps=6, draft="0.7", refine_sigmas="0.78, 0.45, 0", freeze_audio=True),
     # one stage at full size, 6 steps: stock-level camera moves, motion and close-up faces (motion2), ≈201 s per clip
     "ts_s6": dict(_RAPIDH3, steps=6, decode_save="overlap", rapidh3_attn=190, te_quant="int8_rot"),
